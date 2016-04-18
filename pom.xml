@@ -101,6 +101,27 @@
                 </executions>
             </plugin>
 
+            <!-- CUP plugin -->
+            <plugin>
+                <groupId>com.github.vbmacher</groupId>
+                <artifactId>cup-maven-plugin</artifactId>
+                <version>1.0.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <cupDefinition>src/main/cup/l-lang-parser.cup</cupDefinition>
+                    <outputDirectory>src/main/java</outputDirectory>
+                    <className>Parser</className>
+                    <symbolsName>Sym</symbolsName>
+                    <packageName>ru.spbau.mit.langl.gen</packageName>
+                </configuration>
+            </plugin>
+
             <!-- jar -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

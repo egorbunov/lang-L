@@ -6,7 +6,7 @@ Open in Intellij Idea as maven project or run command under root directory: `mvn
 
 After build finished u can run lexer (jar file under target dir) with command: `java -jar langle-lex-1.0.jar`
 
-#### Dependencies used
+#### What used
 
 * Kotlin
 * JFlex

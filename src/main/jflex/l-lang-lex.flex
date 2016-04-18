@@ -1,15 +1,17 @@
 package ru.spbau.mit.langl.gen;
 
 import ru.spbau.mit.langl.lex.*;
+import java_cup.runtime.*;
 
+// ===================== LEXER ==========================
 %%
 
 %class Lexer
 %public
+%cup
 %unicode
 %line
 %column
-%type Token
 
 %{
     private int from() {
@@ -18,6 +20,14 @@ import ru.spbau.mit.langl.lex.*;
 
     private int to() {
         return yycolumn + yytext().length();
+    }
+
+    private Symbol symbol(Keyword kw) {
+        return new Symbol(kw.getId(), from(), to());
+    }
+
+    private Symbol symbol(Keyword kw, Object value) {
+        return new Symbol(kw.getId(), from(), to(), value);
     }
 %}
 
@@ -33,37 +43,38 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 
 <YYINITIAL> {
     // keywords
-    "if"                           { return new Keyword(KeywordId.IF, from(), to()); }
-    "then"                         { return new Keyword(KeywordId.THEN, from(), to()); }
-    "else"                         { return new Keyword(KeywordId.ELSE, from(), to()); }
-    "read"                         { return new Keyword(KeywordId.READ, from(), to()); }
-    "write"                        { return new Keyword(KeywordId.WRITE, from(), to()); }
-    "do"                           { return new Keyword(KeywordId.DO, from(), to()); }
-    "skip"                         { return new Keyword(KeywordId.SKIP, from(), to()); }
+    "if"                           { return symbol(Keyword.IF); }
+    "then"                         { return symbol(Keyword.THEN); }
+    "else"                         { return symbol(Keyword.ELSE); }
+    "read"                         { return symbol(Keyword.READ); }
+    "write"                        { return symbol(Keyword.WRITE); }
+    "do"                           { return symbol(Keyword.DO); }
+    "skip"                         { return symbol(Keyword.SKIP); }
 
     // operators
-    "+"                            { return new Operator(OperatorId.PLUS, from(), to()); }
-    "-"                            { return new Operator(OperatorId.MINUS, from(), to()); }
-    "*"                            { return new Operator(OperatorId.MUL, from(), to()); }
-    "/"                            { return new Operator(OperatorId.DIV, from(), to()); }
-    "%"                            { return new Operator(OperatorId.MOD, from(), to()); }
-    "=="                           { return new Operator(OperatorId.EQ, from(), to()); }
-    "!="                           { return new Operator(OperatorId.NEQ, from(), to()); }
-    ">"                            { return new Operator(OperatorId.GE, from(), to()); }
-    ">="                           { return new Operator(OperatorId.GEQ, from(), to()); }
-    "<"                            { return new Operator(OperatorId.LE, from(), to()); }
-    "<="                           { return new Operator(OperatorId.LEQ, from(), to()); }
-    "&&"                           { return new Operator(OperatorId.LAND, from(), to()); }
-    "||"                           { return new Operator(OperatorId.LOR, from(), to()); }
-    ":="                           { return new Operator(OperatorId.ASSIGN, from(), to()); }
+    "+"                            { return symbol(Keyword.PLUS); }
+    "-"                            { return symbol(Keyword.MINUS); }
+    "*"                            { return symbol(Keyword.MUL); }
+    "/"                            { return symbol(Keyword.DIV); }
+    "%"                            { return symbol(Keyword.MOD); }
+    "=="                           { return symbol(Keyword.EQ); }
+    "!="                           { return symbol(Keyword.NEQ); }
+    ">"                            { return symbol(Keyword.GE); }
+    ">="                           { return symbol(Keyword.GEQ); }
+    "<"                            { return symbol(Keyword.LE); }
+    "<="                           { return symbol(Keyword.LEQ); }
+    "&&"                           { return symbol(Keyword.LAND); }
+    "||"                           { return symbol(Keyword.LOR); }
+    ":="                           { return symbol(Keyword.ASSIGN); }
 
     // special chars
     {WhiteSpace}                   { /* ignore */ }
-    ";"                            { return new Colon(from(), to()); }
+    ";"                            { return symbol(Keyword.COLON); }
 
     // nums and ids
-    {Identifier}                   { return new Var(yytext(), from(), to()); }
-    {DecIntegerLiteral}            { return new Num(Integer.valueOf(yytext()), from(), to()); }
+    {Identifier}                   { return symbol(Keyword.ID, yytext()); }
+    {DecIntegerLiteral}            { return symbol(Keyword.INT, Integer.valueOf(yytext())); }
 }
 
+<<EOF>>                            { return new Symbol(Keyword.EOF.getId()); }
 [^]                                { throw new IllegalCharacterException(yytext(), from()); }

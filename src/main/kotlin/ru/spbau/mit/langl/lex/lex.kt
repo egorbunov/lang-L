@@ -5,71 +5,45 @@ package ru.spbau.mit.langl.lex
  * email: egor-mailbox@ya.ru
  */
 
-enum class KeywordId {
-    IF,
-    THEN,
-    ELSE,
-    READ,
-    WRITE,
-    WHILE,
-    DO,
-    SKIP
-}
+enum class Keyword(val id: Int) {
+    IF(0),
+    THEN(1),
+    ELSE(2),
+    READ(3),
+    WRITE(4),
+    DO(5),
+    SKIP(6),
+    PLUS(7),
+    MINUS(8),
+    MUL(9),
+    DIV(10),
+    MOD(11),
+    EQ(12),
+    NEQ(13),
+    GE(14),
+    GEQ(15),
+    LE(16),
+    LEQ(17),
+    LAND(18),
+    LOR(19),
+    ASSIGN(20),
+    COLON(21),
+    INT(22),
+    ID(23),
+    EOF(24);
 
-enum class OperatorId {
-    PLUS, // +
-    MINUS, // -
-    MUL, // *
-    DIV, // /
-    MOD, // %
-    EQ, // ==
-    NEQ, // !=
-    GE, // >
-    GEQ, // >=
-    LE, // <
-    LEQ, // <=
-    LAND, // &&
-    LOR,   // ||
-    ASSIGN // := not sure about this
-}
-
-abstract class Token(val from: Int, val to: Int) {
-    override fun toString(): String {
-        return "[$from, $to)";
-    }
-}
-
-class Keyword(val kw: KeywordId, from: Int, to: Int) : Token(from, to) {
-    override fun toString(): String {
-        return "Keyword(${kw.name}, ${super.toString()})"
-    }
-}
-
-class Operator(val op: OperatorId, from: Int, to: Int) : Token(from, to) {
-    override fun toString(): String {
-        return "Op(${op.name}, ${super.toString()})"
-    }
-}
-
-class Var(val name: String, from: Int, to: Int) : Token(from, to) {
-    override fun toString(): String {
-        return "Var($name, ${super.toString()})"
-    }
-}
-
-class Colon(from: Int, to: Int) : Token(from, to) {
-    override fun toString(): String {
-        return "Colon(${super.toString()})"
-    }
-}
-
-class Num(val num: Int, from: Int, to: Int) : Token(from ,to) {
-    override fun toString(): String {
-        return "Num($num, ${super.toString()})"
+    companion object {
+        fun fromInt(id: Int): Keyword {
+            for (kw in Keyword.values()) {
+                if (kw.id == id) {
+                    return kw
+                }
+            }
+            throw RuntimeException("Bad keyword id!")
+        }
     }
 }
 
 class IllegalCharacterException(str: String, pos: Int) :
         RuntimeException("Illegal input [ $str ] at position [ $pos ] ") {
 }
-

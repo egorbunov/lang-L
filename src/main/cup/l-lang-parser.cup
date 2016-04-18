@@ -1,0 +1,7 @@
+import java_cup.runtime.*;
+
+parser code {:
+    public Parser(Lexer lex, ComplexSymbolFactoryc csf) {
+        super(lex, csf);
+    }
+:};
