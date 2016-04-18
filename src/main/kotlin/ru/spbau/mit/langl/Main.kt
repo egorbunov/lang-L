@@ -2,7 +2,6 @@ package ru.spbau.mit.langl
 
 import ru.spbau.mit.langl.gen.Lexer
 import java.io.StringReader
-import java.util.*
 
 /**
  * Created by Egor Gorbunov on 28.03.2016.

@@ -2,6 +2,8 @@ package ru.spbau.mit.langl.gen;
 
 import ru.spbau.mit.langl.lex.*;
 import java_cup.runtime.*;
+import java_cup.runtime.ComplexSymbolFactory;
+import java_cup.runtime.ComplexSymbolFactory.Location;
 
 // ===================== LEXER ==========================
 %%
@@ -14,6 +16,13 @@ import java_cup.runtime.*;
 %column
 
 %{
+    ComplexSymbolFactory symbolFactory;
+
+    public Lexer(java.io.Reader in, ComplexSymbolFactory sf){
+        this(in);
+        symbolFactory = sf;
+    }
+
     private int from() {
         return yycolumn;
     }
@@ -22,14 +31,23 @@ import java_cup.runtime.*;
         return yycolumn + yytext().length();
     }
 
-    private Symbol symbol(Keyword kw) {
-        return new Symbol(kw.getId(), from(), to());
+    private Symbol symbol(String name, int sym) {
+        return symbolFactory.newSymbol(name, sym,
+                                      new Location(yyline+1, yycolumn+1),
+                                      new Location(yyline+1, yycolumn+yylength()));
     }
 
-    private Symbol symbol(Keyword kw, Object value) {
-        return new Symbol(kw.getId(), from(), to(), value);
+    private Symbol symbol(String name, int sym, Object val) {
+        Location left = new Location(yyline+1, yycolumn+1);
+        Location right= new Location(yyline+1, yycolumn+yylength());
+        return symbolFactory.newSymbol(name, sym, left, right,val);
     }
+
+  private void error(String message) {
+    System.out.println("Error at line "+(yyline+1)+", column "+(yycolumn+1)+" : "+message);
+  }
 %}
+
 
 LineTerminator = \r|\n|\r\n
 InputCharacter = [^\r\n]
@@ -43,38 +61,45 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 
 <YYINITIAL> {
     // keywords
-    "if"                           { return symbol(Keyword.IF); }
-    "then"                         { return symbol(Keyword.THEN); }
-    "else"                         { return symbol(Keyword.ELSE); }
-    "read"                         { return symbol(Keyword.READ); }
-    "write"                        { return symbol(Keyword.WRITE); }
-    "do"                           { return symbol(Keyword.DO); }
-    "skip"                         { return symbol(Keyword.SKIP); }
+    "if"                           { return symbol("IF", Sym.IF); }
+    "then"                         { return symbol("THEN", Sym.THEN); }
+    "else"                         { return symbol("ELSE", Sym.ELSE); }
+    "read"                         { return symbol("READ", Sym.READ); }
+    "write"                        { return symbol("WRITE", Sym.WRITE); }
+    "do"                           { return symbol("DO", Sym.DO); }
+    "skip"                         { return symbol("SKIP", Sym.SKIP); }
+    "while"                        { return symbol("WHILE", Sym.WHILE); }
+
 
     // operators
-    "+"                            { return symbol(Keyword.PLUS); }
-    "-"                            { return symbol(Keyword.MINUS); }
-    "*"                            { return symbol(Keyword.MUL); }
-    "/"                            { return symbol(Keyword.DIV); }
-    "%"                            { return symbol(Keyword.MOD); }
-    "=="                           { return symbol(Keyword.EQ); }
-    "!="                           { return symbol(Keyword.NEQ); }
-    ">"                            { return symbol(Keyword.GE); }
-    ">="                           { return symbol(Keyword.GEQ); }
-    "<"                            { return symbol(Keyword.LE); }
-    "<="                           { return symbol(Keyword.LEQ); }
-    "&&"                           { return symbol(Keyword.LAND); }
-    "||"                           { return symbol(Keyword.LOR); }
-    ":="                           { return symbol(Keyword.ASSIGN); }
+    "+"                            { return symbol("PLUS", Sym.PLUS); }
+    "-"                            { return symbol("MINUS", Sym.MINUS); }
+    "*"                            { return symbol("MUL", Sym.MUL); }
+    "/"                            { return symbol("DIV", Sym.DIV); }
+    "%"                            { return symbol("MOD", Sym.MOD); }
+    "=="                           { return symbol("EQ", Sym.EQ); }
+    "!="                           { return symbol("NEQ", Sym.NEQ); }
+    ">"                            { return symbol("GE", Sym.GE); }
+    ">="                           { return symbol("GEQ", Sym.GEQ); }
+    "<"                            { return symbol("LE", Sym.LE); }
+    "<="                           { return symbol("LEQ", Sym.LEQ); }
+    "&&"                           { return symbol("LAND", Sym.LAND); }
+    "||"                           { return symbol("LOR", Sym.LOR); }
+    ":="                           { return symbol("ASSIGN", Sym.ASSIGN); }
 
     // special chars
     {WhiteSpace}                   { /* ignore */ }
-    ";"                            { return symbol(Keyword.COLON); }
+    ";"                            { return symbol("COLON", Sym.COLON); }
+    "("                            { return symbol("LPAREN", Sym.LPAREN);}
+    ")"                            { return symbol("RPAREN", Sym.RPAREN);}
 
     // nums and ids
-    {Identifier}                   { return symbol(Keyword.ID, yytext()); }
-    {DecIntegerLiteral}            { return symbol(Keyword.INT, Integer.valueOf(yytext())); }
+    {Identifier}                   { return symbol("ID", Sym.ID, yytext()); }
+    {DecIntegerLiteral}            { return symbol("INT", Sym.INT, Integer.valueOf(yytext())); }
 }
 
-<<EOF>>                            { return new Symbol(Keyword.EOF.getId()); }
+<<EOF>>                            { return symbolFactory.newSymbol("EOF", Sym.EOF,
+                                                                    new Location(yyline+1,yycolumn+1),
+                                                                    new Location(yyline+1,yycolumn+1)); }
 [^]                                { throw new IllegalCharacterException(yytext(), from()); }
+

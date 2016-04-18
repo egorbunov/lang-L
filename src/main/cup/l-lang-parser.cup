@@ -1,7 +1,78 @@
 import java_cup.runtime.*;
+import ru.spbau.mit.langl.parse.*;
+import java.util.ArrayList;
+import java.util.List;
+
 
 parser code {:
-    public Parser(Lexer lex, ComplexSymbolFactoryc csf) {
+    private Lexer lexer;
+
+    public Parser(Lexer lex, ComplexSymbolFactory csf) {
         super(lex, csf);
     }
 :};
+
+//scan with {: return lexer.next_token(); :}
+
+terminal            IF, THEN, ELSE, READ, WRITE, DO, WHILE, SKIP, LPAREN, RPAREN,
+                    PLUS, MINUS, MUL, DIV, MOD, EQ, NEQ, GE, GEQ, LE, LEQ, LAND, LOR, ASSIGN, COLON;
+terminal Integer    INT;        // our scanner provides numbers as integers
+terminal String     ID;
+
+/* Non terminals */
+non terminal Program statement_list;
+non terminal Statement statement;
+non terminal CommandStatement command_st;
+non terminal AssignStatement assign_st;
+non terminal WhileStatement while_st;
+non terminal IfStatement if_st;
+non terminal UnaryFunStatement unary_fun_st;
+non terminal Expression expr;
+
+/* Precedences */
+precedence left NEQ, EQ, GE, GEQ, LE, LEQ;
+precedence left PLUS, MINUS;
+precedence left MUL, MOD, DIV;
+precedence left LOR, LAND;
+
+/* The grammar rules */
+statement_list ::= statement_list:p COLON statement:st {: p.add(st);
+                                                          RESULT = p; :}
+                 | statement:st                          {: Program p = new Program();
+                                                            p.add(st);
+                                                            RESULT = p; :}
+;
+statement ::= command_st:st                             {: RESULT = st; :}
+            | assign_st:st                              {: RESULT = st; :}
+            | unary_fun_st:st                           {: RESULT = st; :}
+            | while_st:st                               {: RESULT = st; :}
+            | if_st:st                                  {: RESULT = st; :}
+;
+command_st ::= SKIP                                     {: RESULT = new CommandStatement(Command.SKIP); :}
+;
+assign_st ::= ID:id ASSIGN expr:e                       {: RESULT = new AssignStatement(new IdNode(id), e); :}
+;
+unary_fun_st ::= WRITE expr:e                           {: RESULT = new UnaryFunStatement(UnaryFun.WRITE, e); :}
+               | READ expr:e                            {: RESULT = new UnaryFunStatement(UnaryFun.READ, e); :}
+;
+while_st ::= WHILE expr:e DO statement:st               {: RESULT = new WhileStatement(e, st); :}
+;
+if_st ::= IF expr:e THEN statement:ifTrue ELSE statement:ifFalse {: RESULT = new IfStatement(e, ifTrue, ifFalse); :}
+;
+expr ::= expr:e1 PLUS expr:e2                {: RESULT = new BinaryArithmeticExpr(ArithmeticOp.PLUS, e1, e2); :}
+       | expr:e1 MINUS expr:e2               {: RESULT = new BinaryArithmeticExpr(ArithmeticOp.MINUS, e1, e2); :}
+       | expr:e1 MUL expr:e2                 {: RESULT = new BinaryArithmeticExpr(ArithmeticOp.MUL, e1, e2); :}
+       | expr:e1 DIV expr:e2                 {: RESULT = new BinaryArithmeticExpr(ArithmeticOp.DIV, e1, e2); :}
+       | expr:e1 MOD expr:e2                 {: RESULT = new BinaryArithmeticExpr(ArithmeticOp.MOD, e1, e2); :}
+       | expr:e1 LAND expr:e2                {: RESULT = new BinaryPredicateExpr(PredicateOp.LAND, e1, e2); :}
+       | expr:e1 LOR expr:e2                 {: RESULT = new BinaryPredicateExpr(PredicateOp.LOR, e1, e2); :}
+       | expr:e1 EQ expr:e2                  {: RESULT = new RelationExpr(RelationOp.EQ, e1, e2); :}
+       | expr:e1 NEQ expr:e2                 {: RESULT = new RelationExpr(RelationOp.NEQ, e1, e2); :}
+       | expr:e1 GE expr:e2                  {: RESULT = new RelationExpr(RelationOp.GE, e1, e2); :}
+       | expr:e1 GEQ expr:e2                 {: RESULT = new RelationExpr(RelationOp.GEQ, e1, e2); :}
+       | expr:e1 LE expr:e2                  {: RESULT = new RelationExpr(RelationOp.LE, e1, e2); :}
+       | expr:e1 LEQ expr:e2                 {: RESULT = new RelationExpr(RelationOp.LEQ, e1, e2); :}
+       | LPAREN expr:e RPAREN                {: RESULT = e; :}
+       | ID:id                               {: RESULT = new IdNode(id); :}
+       | INT:val                             {: RESULT = new NumberNode(val); :}
+;
