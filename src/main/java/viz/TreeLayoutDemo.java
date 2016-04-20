@@ -1,5 +1,6 @@
 package viz;
 
+import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.base.Supplier;
 import edu.uci.ics.jung.algorithms.layout.RadialTreeLayout;
@@ -11,7 +12,6 @@ import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.EdgeShape;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
-import edu.uci.ics.jung.visualization.renderers.*;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
 
 import javax.swing.*;
@@ -27,7 +27,8 @@ public class TreeLayoutDemo extends JApplet {
     /**
      * the graph
      */
-    Forest<String,Integer> graph;
+
+    Tree<String,Integer> graph;
 
     Supplier<DirectedGraph<String,Integer>> graphFactory =
             new Supplier<DirectedGraph<String,Integer>>() {
@@ -64,23 +65,32 @@ public class TreeLayoutDemo extends JApplet {
 
     TreeLayout<String,Integer> treeLayout;
 
-    RadialTreeLayout<String,Integer> radialLayout;
-
     public TreeLayoutDemo() {
         // create a simple graph for the demo
-        graph = new DelegateForest<String,Integer>();
+        graph = new DelegateTree<String, Integer>();
 
         createTree();
 
         treeLayout = new TreeLayout<String,Integer>(graph);
-        radialLayout = new RadialTreeLayout<String,Integer>(graph);
 
-        radialLayout.setSize(new Dimension(600,600));
-        vv =  new VisualizationViewer<String,Integer>(treeLayout, new Dimension(600,600));
+        vv =  new VisualizationViewer<String,Integer>(treeLayout, new Dimension(400, 400));
+
         vv.setBackground(Color.white);
         vv.getRenderContext().setEdgeShapeTransformer(EdgeShape.line(graph));
         vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
         vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
+
+        vv.getRenderContext().setVertexShapeTransformer(new Function<String, Shape>() {
+            public Shape apply(String s) {
+                System.out.println(s);
+                return null;
+            }
+        });
+//        vv.getRenderer().setVertexRenderer(new Renderer.Vertex<String, Integer>() {
+//            public void paintVertex(RenderContext<String, Integer> renderContext, Layout<String, Integer> layout, String s) {
+//
+//            }
+//        });
 
 
         // add a listener for ToolTips
@@ -102,9 +112,6 @@ public class TreeLayoutDemo extends JApplet {
         content.add(controls, BorderLayout.SOUTH);
     }
 
-    /**
-     *
-     */
     private void createTree() {
         graph.addVertex("V0");
         graph.addEdge(edgeFactory.get(), "V0", "V1");
@@ -117,23 +124,6 @@ public class TreeLayoutDemo extends JApplet {
         graph.addEdge(edgeFactory.get(), "V3", "V8");
         graph.addEdge(edgeFactory.get(), "V6", "V9");
         graph.addEdge(edgeFactory.get(), "V4", "V10");
-
-        graph.addVertex("A0");
-        graph.addEdge(edgeFactory.get(), "A0", "A1");
-        graph.addEdge(edgeFactory.get(), "A0", "A2");
-        graph.addEdge(edgeFactory.get(), "A0", "A3");
-
-        graph.addVertex("B0");
-        graph.addEdge(edgeFactory.get(), "B0", "B1");
-        graph.addEdge(edgeFactory.get(), "B0", "B2");
-        graph.addEdge(edgeFactory.get(), "B1", "B4");
-        graph.addEdge(edgeFactory.get(), "B2", "B3");
-        graph.addEdge(edgeFactory.get(), "B2", "B5");
-        graph.addEdge(edgeFactory.get(), "B4", "B6");
-        graph.addEdge(edgeFactory.get(), "B4", "B7");
-        graph.addEdge(edgeFactory.get(), "B3", "B8");
-        graph.addEdge(edgeFactory.get(), "B6", "B9");
-
     }
 
     public static void main(String[] args) {

@@ -5,7 +5,6 @@ package ru.spbau.mit.langl.lex
  * email: egor-mailbox@ya.ru
  */
 
-
 class IllegalCharacterException(str: String, pos: Int) :
         RuntimeException("Illegal input [ $str ] at position [ $pos ] ") {
 }
