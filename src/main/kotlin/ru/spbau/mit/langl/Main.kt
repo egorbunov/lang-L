@@ -1,5 +1,7 @@
 package ru.spbau.mit.langl
 
+import ru.spbau.mit.langl.app.AstVisualizeApp
+import ru.spbau.mit.langl.app.LexerApp
 import ru.spbau.mit.langl.gen.Lexer
 import java.io.StringReader
 
@@ -8,22 +10,30 @@ import java.io.StringReader
  * email: egor-mailbox@ya.ru
  */
 
+val LEXER = "lex"
+val AST_VISUALIZER = "ast"
+val PRETTY_PRINTER = "pp"
+val OPTIMIZER = "opt"
+
+fun help() {
+    println("Formal languages course lab. project. Specify exactly one command line argument")
+    println("to run desirable tool. Every tool works as interpreter: you give line, and it answers.")
+    println("Here is the list of available tools (arguments):")
+    println("   $LEXER")
+    println("       Lexer tool...just lexer")
+    println("   $AST_VISUALIZER")
+    println("       Parses given line, generates and shows Abstract Syntax Tree")
+}
+
 fun main(args: Array<String>) {
-    var lexer = Lexer(StringReader(""))
-//    while (true) {
-//        print(">> ")
-//        val program = readLine() ?: break;
-//        lexer.yyreset(StringReader(program))
-//
-//        var tokens = ArrayList<Token>()
-//
-//        try {
-//            while (true) {
-//                tokens.add(lexer.yylex() ?: break)
-//            }
-//            println(tokens)
-//        } catch (err: IllegalCharacterException) {
-//           println(err.message)
-//        }
-//    }
+    if (args.size != 1) {
+        help()
+        return
+    }
+
+    when (args[0]) {
+        LEXER -> LexerApp().run()
+        AST_VISUALIZER -> AstVisualizeApp().run()
+        else -> help()
+    }
 }
