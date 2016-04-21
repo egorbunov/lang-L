@@ -28,69 +28,71 @@ enum class Command {
     SKIP
 }
 
-abstract class Expression {
+abstract class AstNode {
     abstract fun accept(visitor: AstTreeVisitor)
 }
 
-class BinaryArithmeticExpr(val op: ArithmeticOp, val lhs: Expression, val rhs: Expression): Expression() {
+abstract class Expression : AstNode() {
+}
+
+class BinaryArithmeticExpr(var op: ArithmeticOp, var lhs: Expression, var rhs: Expression): Expression() {
     override fun accept(visitor: AstTreeVisitor) {
         visitor.visit(this)
     }
 }
 
-class BinaryPredicateExpr(val op: PredicateOp, val lhs: Expression, val rhs: Expression): Expression() {
+class BinaryPredicateExpr(var op: PredicateOp, var lhs: Expression, var rhs: Expression): Expression() {
     override fun accept(visitor: AstTreeVisitor) {
         visitor.visit(this)
     }
 }
 
-class RelationExpr(val op: RelationOp, val lhs: Expression, val rhs: Expression): Expression() {
+class RelationExpr(var op: RelationOp, var lhs: Expression, var rhs: Expression): Expression() {
     override fun accept(visitor: AstTreeVisitor) {
         visitor.visit(this)
     }
 }
 
-class NumberNode(val value: Int): Expression() {
+class NumberNode(var value: Int): Expression() {
     override fun accept(visitor: AstTreeVisitor) {
         visitor.visit(this)
     }
 }
 
-class IdNode(val value: String): Expression() {
+class IdNode(var value: String): Expression() {
     override fun accept(visitor: AstTreeVisitor) {
         visitor.visit(this)
     }
 }
 
-abstract class Statement {
-    abstract fun accept(visitor: AstTreeVisitor)
+abstract class Statement : AstNode() {
 }
 
-class UnaryFunStatement(val func: UnaryFun, val operand: Expression): Statement() {
+class UnaryFunStatement(var func: UnaryFun, var operand: Expression): Statement() {
     override fun accept(visitor: AstTreeVisitor) {
         visitor.visit(this)
     }
 }
 
-class IfStatement(val cond: Expression, val ifTrue: Statement, val ifFalse: Statement): Statement() {
+class IfStatement(var cond: Expression, var ifTrue: Statement, var ifFalse: Statement): Statement() {
     override fun accept(visitor: AstTreeVisitor) {
         visitor.visit(this)
     }
 }
 
-class WhileStatement(val cond: Expression, val doStmnt: Statement): Statement() {
+class WhileStatement(var cond: Expression, var doStmnt: Statement): Statement() {
     override fun accept(visitor: AstTreeVisitor) {
         visitor.visit(this)
     }
 }
 
-class AssignStatement(val id: IdNode, val expr: Expression): Statement() {
+class AssignStatement(var id: IdNode, var expr: Expression): Statement() {
     override fun accept(visitor: AstTreeVisitor) {
         visitor.visit(this)
     }
 }
 
-class CommandStatement(val cmd: Command): Statement() {
+class CommandStatement(var cmd: Command): Statement() {
     override fun accept(visitor: AstTreeVisitor) {
         visitor.visit(this)
     }

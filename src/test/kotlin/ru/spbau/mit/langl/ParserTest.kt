@@ -13,7 +13,5 @@ class ParserTest {
     @Test fun test1() {
         val parser = ParserWrapper(StringReader("x := 100"))
         val parse = parser.parse()
-
-
     }
 }
