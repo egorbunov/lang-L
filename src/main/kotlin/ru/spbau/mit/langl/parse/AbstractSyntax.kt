@@ -8,16 +8,56 @@ import java.util.*
  * email: egor-mailbox@ya.ru
  */
 
-enum class ArithmeticOp(val str: String) {
-    PLUS("+"), MINUS("-"), MUL("*"), DIV("/"), MOD("%")
+interface BinaryOp {
+    fun str(): String
 }
 
-enum class RelationOp(val str: String) {
-    EQ("=="), NEQ("!="), GE(">"), GEQ(">="), LE("<"), LEQ("<=")
+enum class BinaryArithmeticOp(): BinaryOp {
+    PLUS {
+        override fun str() = "+"
+    },
+    MINUS {
+        override fun str() = "-"
+    },
+    MUL {
+        override fun str() = "*"
+    },
+    DIV {
+        override fun str() = "/"
+    },
+    MOD {
+        override fun str() = "%"
+    }
 }
 
-enum class PredicateOp(val str: String) {
-    LAND("&&"), LOR("||")
+enum class RelationOp(): BinaryOp {
+    EQ {
+        override fun str() = "=="
+    },
+    NEQ {
+        override fun str() = "!="
+    },
+    GE {
+        override fun str() = ">"
+    },
+    GEQ {
+        override fun str() = ">="
+    },
+    LE {
+        override fun str() = "<"
+    },
+    LEQ {
+        override fun str() = "<="
+    }
+}
+
+enum class BinaryPredicateOp(): BinaryOp {
+    LAND {
+        override fun str() = "&&"
+    },
+    LOR {
+        override fun str() = "||"
+    }
 }
 
 enum class UnaryFun {
@@ -35,19 +75,7 @@ abstract class AstNode {
 abstract class Expression : AstNode() {
 }
 
-class BinaryArithmeticExpr(var op: ArithmeticOp, var lhs: Expression, var rhs: Expression): Expression() {
-    override fun accept(visitor: AstTreeVisitor) {
-        visitor.visit(this)
-    }
-}
-
-class BinaryPredicateExpr(var op: PredicateOp, var lhs: Expression, var rhs: Expression): Expression() {
-    override fun accept(visitor: AstTreeVisitor) {
-        visitor.visit(this)
-    }
-}
-
-class RelationExpr(var op: RelationOp, var lhs: Expression, var rhs: Expression): Expression() {
+class BinaryOpExpr(var op: BinaryOp, var lhs: Expression, var rhs: Expression): Expression() {
     override fun accept(visitor: AstTreeVisitor) {
         visitor.visit(this)
     }

@@ -13,9 +13,12 @@ import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.EdgeShape;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
+import org.junit.runners.Parameterized;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * Demonsrates TreeLayout and RadialTreeLayout.
@@ -27,6 +30,13 @@ public class TreeLayoutDemo extends JApplet {
     /**
      * the graph
      */
+
+    @Parameterized.Parameters
+    public static Collection getTestData() {
+        return Arrays.asList(new Object[][] {
+                { "x := 100", null }
+        });
+    }
 
     Tree<String,Integer> graph;
 

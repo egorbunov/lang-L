@@ -40,8 +40,8 @@ class VisTreeBuilder : AstTreeVisitor {
         }
     }
 
-    override fun visit(node: BinaryArithmeticExpr) {
-        val nodeLabel = "BINARY_ARITHM_EXPR"
+    override fun visit(node: BinaryOpExpr) {
+        val nodeLabel = "BINARY_OP_EXPR"
 
         val oldParent = parent
         val newNode = Vertex(false, nodeLabel)
@@ -49,39 +49,22 @@ class VisTreeBuilder : AstTreeVisitor {
 
         parent = newNode
         node.lhs.accept(this)
-        tree.addEdge(edgeFactory.get(), parent, Vertex(true, node.op.str))
+
+
+        var opLabel = ""
+        if (node.op is BinaryArithmeticOp) {
+            opLabel = "BIN_ARITHM_OP"
+        } else if (node.op is BinaryPredicateOp) {
+            opLabel = "BIN_PRED_OP"
+        } else if (node.op is RelationOp) {
+            opLabel = "RELATION_OP"
+        }
+
+        val opNode = Vertex(false, opLabel)
+        tree.addEdge(edgeFactory.get(), parent, opNode)
+        tree.addEdge(edgeFactory.get(), opNode, Vertex(true, node.op.str()))
+
         node.rhs.accept(this)
-
-        parent = oldParent
-    }
-
-    override fun visit(node: BinaryPredicateExpr) {
-        val nodeLabel = "BINARY_PRED_EXPR"
-
-        val oldParent = parent
-        val newNode = Vertex(false, nodeLabel)
-        tree.addEdge(edgeFactory.get(), oldParent, newNode)
-
-        parent = newNode
-        node.lhs.accept(this)
-        tree.addEdge(edgeFactory.get(), parent, Vertex(true, node.op.str))
-        node.rhs.accept(this)
-
-        parent = oldParent
-    }
-
-    override fun visit(node: RelationExpr) {
-        val nodeLabel = "RELATION_EXPR"
-
-        val oldParent = parent
-        val newNode = Vertex(false, nodeLabel)
-        tree.addEdge(edgeFactory.get(), oldParent, newNode)
-
-        parent = newNode
-        node.lhs.accept(this)
-        tree.addEdge(edgeFactory.get(), parent, Vertex(true, node.op.str))
-        node.rhs.accept(this)
-
         parent = oldParent
     }
 
@@ -112,7 +95,7 @@ class VisTreeBuilder : AstTreeVisitor {
     }
 
     override fun visit(node: IfStatement) {
-        val nodeLabel = "IF_STATEMENT"
+        val nodeLabel = "IF_ST"
 
         val oldParent = parent
         val newNode = Vertex(false, nodeLabel)
@@ -130,7 +113,7 @@ class VisTreeBuilder : AstTreeVisitor {
     }
 
     override fun visit(node: WhileStatement) {
-        val nodeLabel = "WHILE_STATEMENT"
+        val nodeLabel = "WHILE_ST"
 
         val oldParent = parent
         val newNode = Vertex(false, nodeLabel)
@@ -146,7 +129,7 @@ class VisTreeBuilder : AstTreeVisitor {
     }
 
     override fun visit(node: AssignStatement) {
-        val nodeLabel = "ASSIGN_STATEMENT"
+        val nodeLabel = "ASSIGN_ST"
 
         val oldParent = parent
         val newNode = Vertex(false, nodeLabel)

@@ -59,19 +59,19 @@ while_st ::= WHILE expr:e DO statement:st               {: RESULT = new WhileSta
 ;
 if_st ::= IF expr:e THEN statement:ifTrue ELSE statement:ifFalse {: RESULT = new IfStatement(e, ifTrue, ifFalse); :}
 ;
-expr ::= expr:e1 PLUS expr:e2                {: RESULT = new BinaryArithmeticExpr(ArithmeticOp.PLUS, e1, e2); :}
-       | expr:e1 MINUS expr:e2               {: RESULT = new BinaryArithmeticExpr(ArithmeticOp.MINUS, e1, e2); :}
-       | expr:e1 MUL expr:e2                 {: RESULT = new BinaryArithmeticExpr(ArithmeticOp.MUL, e1, e2); :}
-       | expr:e1 DIV expr:e2                 {: RESULT = new BinaryArithmeticExpr(ArithmeticOp.DIV, e1, e2); :}
-       | expr:e1 MOD expr:e2                 {: RESULT = new BinaryArithmeticExpr(ArithmeticOp.MOD, e1, e2); :}
-       | expr:e1 LAND expr:e2                {: RESULT = new BinaryPredicateExpr(PredicateOp.LAND, e1, e2); :}
-       | expr:e1 LOR expr:e2                 {: RESULT = new BinaryPredicateExpr(PredicateOp.LOR, e1, e2); :}
-       | expr:e1 EQ expr:e2                  {: RESULT = new RelationExpr(RelationOp.EQ, e1, e2); :}
-       | expr:e1 NEQ expr:e2                 {: RESULT = new RelationExpr(RelationOp.NEQ, e1, e2); :}
-       | expr:e1 GE expr:e2                  {: RESULT = new RelationExpr(RelationOp.GE, e1, e2); :}
-       | expr:e1 GEQ expr:e2                 {: RESULT = new RelationExpr(RelationOp.GEQ, e1, e2); :}
-       | expr:e1 LE expr:e2                  {: RESULT = new RelationExpr(RelationOp.LE, e1, e2); :}
-       | expr:e1 LEQ expr:e2                 {: RESULT = new RelationExpr(RelationOp.LEQ, e1, e2); :}
+expr ::= expr:e1 PLUS expr:e2                {: RESULT = new BinaryOpExpr(BinaryArithmeticOp.PLUS, e1, e2); :}
+       | expr:e1 MINUS expr:e2               {: RESULT = new BinaryOpExpr(BinaryArithmeticOp.MINUS, e1, e2); :}
+       | expr:e1 MUL expr:e2                 {: RESULT = new BinaryOpExpr(BinaryArithmeticOp.MUL, e1, e2); :}
+       | expr:e1 DIV expr:e2                 {: RESULT = new BinaryOpExpr(BinaryArithmeticOp.DIV, e1, e2); :}
+       | expr:e1 MOD expr:e2                 {: RESULT = new BinaryOpExpr(BinaryArithmeticOp.MOD, e1, e2); :}
+       | expr:e1 LAND expr:e2                {: RESULT = new BinaryOpExpr(BinaryPredicateOp.LAND, e1, e2); :}
+       | expr:e1 LOR expr:e2                 {: RESULT = new BinaryOpExpr(BinaryPredicateOp.LOR, e1, e2); :}
+       | expr:e1 EQ expr:e2                  {: RESULT = new BinaryOpExpr(RelationOp.EQ, e1, e2); :}
+       | expr:e1 NEQ expr:e2                 {: RESULT = new BinaryOpExpr(RelationOp.NEQ, e1, e2); :}
+       | expr:e1 GE expr:e2                  {: RESULT = new BinaryOpExpr(RelationOp.GE, e1, e2); :}
+       | expr:e1 GEQ expr:e2                 {: RESULT = new BinaryOpExpr(RelationOp.GEQ, e1, e2); :}
+       | expr:e1 LE expr:e2                  {: RESULT = new BinaryOpExpr(RelationOp.LE, e1, e2); :}
+       | expr:e1 LEQ expr:e2                 {: RESULT = new BinaryOpExpr(RelationOp.LEQ, e1, e2); :}
        | LPAREN expr:e RPAREN                {: RESULT = e; :}
        | ID:id                               {: RESULT = new IdNode(id); :}
        | INT:val                             {: RESULT = new NumberNode(val); :}

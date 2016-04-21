@@ -8,9 +8,7 @@ import ru.spbau.mit.langl.parse.*
  */
 interface AstTreeVisitor {
     fun visit(node: Program)
-    fun visit(node: BinaryArithmeticExpr)
-    fun visit(node: BinaryPredicateExpr)
-    fun visit(node: RelationExpr)
+    fun visit(node: BinaryOpExpr)
     fun visit(node: NumberNode)
     fun visit(node: IdNode)
     fun visit(node: UnaryFunStatement)
