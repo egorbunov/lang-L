@@ -15,12 +15,13 @@ parser code {:
 //scan with {: return lexer.next_token(); :}
 
 terminal            IF, THEN, ELSE, READ, WRITE, DO, WHILE, SKIP, LPAREN, RPAREN,
-                    PLUS, MINUS, MUL, DIV, MOD, EQ, NEQ, GE, GEQ, LE, LEQ, LAND, LOR, ASSIGN, COLON;
+                    PLUS, MINUS, MUL, DIV, MOD, EQ, NEQ, GE, GEQ, LE, LEQ, LAND, LOR, ASSIGN, COLON,
+                    ENDWHILE, ENDIF;
 terminal Integer    INT;        // our scanner provides numbers as integers
 terminal String     ID;
 
 /* Non terminals */
-non terminal Program statement_list;
+non terminal Program st_list;
 non terminal Statement statement;
 non terminal CommandStatement command_st;
 non terminal AssignStatement assign_st;
@@ -36,11 +37,11 @@ precedence left MUL, MOD, DIV;
 precedence left LOR, LAND;
 
 /* The grammar rules */
-statement_list ::= statement_list:p COLON statement:st {: p.add(st);
-                                                          RESULT = p; :}
-                 | statement:st                          {: Program p = new Program();
-                                                            p.add(st);
-                                                            RESULT = p; :}
+st_list ::= st_list:p COLON statement:st {: p.add(st);
+                                            RESULT = p; :}
+             | statement:st              {: Program p = new Program();
+                                            p.add(st);
+                                            RESULT = p; :}
 ;
 statement ::= command_st:st                             {: RESULT = st; :}
             | assign_st:st                              {: RESULT = st; :}
@@ -55,17 +56,17 @@ assign_st ::= ID:id ASSIGN expr:e                       {: RESULT = new AssignSt
 unary_fun_st ::= WRITE expr:e                           {: RESULT = new UnaryFunStatement(UnaryFun.WRITE, e); :}
                | READ expr:e                            {: RESULT = new UnaryFunStatement(UnaryFun.READ, e); :}
 ;
-while_st ::= WHILE expr:e DO statement:st               {: RESULT = new WhileStatement(e, st); :}
+while_st ::= WHILE expr:e DO st_list:stmnts ENDWHILE             {: RESULT = new WhileStatement(e, stmnts); :}
 ;
-if_st ::= IF expr:e THEN statement:ifTrue ELSE statement:ifFalse {: RESULT = new IfStatement(e, ifTrue, ifFalse); :}
+if_st ::= IF expr:e THEN st_list:ifTrue ELSE st_list:ifFalse ENDIF {: RESULT = new IfStatement(e, ifTrue, ifFalse); :}
 ;
 expr ::= expr:e1 PLUS expr:e2                {: RESULT = new BinaryOpExpr(BinaryArithmeticOp.PLUS, e1, e2); :}
        | expr:e1 MINUS expr:e2               {: RESULT = new BinaryOpExpr(BinaryArithmeticOp.MINUS, e1, e2); :}
        | expr:e1 MUL expr:e2                 {: RESULT = new BinaryOpExpr(BinaryArithmeticOp.MUL, e1, e2); :}
        | expr:e1 DIV expr:e2                 {: RESULT = new BinaryOpExpr(BinaryArithmeticOp.DIV, e1, e2); :}
        | expr:e1 MOD expr:e2                 {: RESULT = new BinaryOpExpr(BinaryArithmeticOp.MOD, e1, e2); :}
-       | expr:e1 LAND expr:e2                {: RESULT = new BinaryOpExpr(BinaryPredicateOp.LAND, e1, e2); :}
        | expr:e1 LOR expr:e2                 {: RESULT = new BinaryOpExpr(BinaryPredicateOp.LOR, e1, e2); :}
+       | expr:e1 LAND expr:e2                {: RESULT = new BinaryOpExpr(BinaryPredicateOp.LAND, e1, e2); :}
        | expr:e1 EQ expr:e2                  {: RESULT = new BinaryOpExpr(RelationOp.EQ, e1, e2); :}
        | expr:e1 NEQ expr:e2                 {: RESULT = new BinaryOpExpr(RelationOp.NEQ, e1, e2); :}
        | expr:e1 GE expr:e2                  {: RESULT = new BinaryOpExpr(RelationOp.GE, e1, e2); :}

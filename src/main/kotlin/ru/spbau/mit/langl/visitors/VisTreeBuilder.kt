@@ -108,6 +108,7 @@ class VisTreeBuilder : AstTreeVisitor {
         node.ifTrue.accept(this)
         tree.addEdge(edgeFactory.get(), parent, Vertex(true, "Else"))
         node.ifFalse.accept(this)
+        tree.addEdge(edgeFactory.get(), parent, Vertex(true, "EndIf"))
 
         parent = oldParent
     }
@@ -124,6 +125,7 @@ class VisTreeBuilder : AstTreeVisitor {
         node.cond.accept(this)
         tree.addEdge(edgeFactory.get(), parent, Vertex(true, "Do"))
         node.doStmnt.accept(this)
+        tree.addEdge(edgeFactory.get(), parent, Vertex(true, "EndWhile"))
 
         parent = oldParent
     }
@@ -164,9 +166,12 @@ class VisTreeBuilder : AstTreeVisitor {
         tree.addEdge(edgeFactory.get(), oldParent, newNode)
 
         parent = newNode
-        for (st in node.statements) {
+
+        node.statements.forEachIndexed { i, st ->
             st.accept(this)
-            tree.addEdge(edgeFactory.get(), parent, Vertex(true, ";"))
+            if (i != node.statements.size - 1) {
+                tree.addEdge(edgeFactory.get(), parent, Vertex(true, ";"))
+            }
         }
 
         parent = oldParent

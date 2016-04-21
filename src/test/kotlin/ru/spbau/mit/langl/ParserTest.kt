@@ -33,7 +33,7 @@ class ParserTest(val program: String, val expectedAst: Program) {
                             }
                     )),
                     arrayOf(
-                            "if 1 == 1 then write x else skip",
+                            "if 1 == 1 then write x else skip endif",
                             with(Program()) {
                                 add(
                                         IfStatement(
@@ -42,8 +42,8 @@ class ParserTest(val program: String, val expectedAst: Program) {
                                                         NumberNode(1),
                                                         NumberNode(1)
                                                 ),
-                                                UnaryFunStatement(UnaryFun.WRITE, IdNode("x")),
-                                                CommandStatement(Command.SKIP)
+                                                Program(UnaryFunStatement(UnaryFun.WRITE, IdNode("x"))),
+                                                Program(CommandStatement(Command.SKIP))
                                         )
                                 )
                                 this
@@ -58,7 +58,7 @@ class ParserTest(val program: String, val expectedAst: Program) {
                             }
                     ),
                     arrayOf(
-                            "while (x == y) && (x <= z) do skip",
+                            "while (x == y) && (x <= z) do skip od",
                             with(Program()) {
                                 add(WhileStatement(
                                         BinaryOpExpr(
@@ -74,7 +74,7 @@ class ParserTest(val program: String, val expectedAst: Program) {
                                                         IdNode("z")
                                                 )
                                         ),
-                                        CommandStatement(Command.SKIP)
+                                        Program(CommandStatement(Command.SKIP))
                                 ))
                                 this
                             }

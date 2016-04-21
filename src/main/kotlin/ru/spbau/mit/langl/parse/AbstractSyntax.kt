@@ -60,12 +60,12 @@ enum class BinaryPredicateOp(): BinaryOp {
     }
 }
 
-enum class UnaryFun {
-    WRITE, READ
+enum class UnaryFun(val str: String) {
+    WRITE("write"), READ("read")
 }
 
-enum class Command {
-    SKIP
+enum class Command(val str: String) {
+    SKIP("skip")
 }
 
 abstract class AstNode {
@@ -96,19 +96,38 @@ class IdNode(var value: String): Expression() {
 abstract class Statement : AstNode() {
 }
 
+/**
+ * Statement may be combined from many statements...
+ */
+class Program(vararg sts: Statement): Statement() {
+    val statements = ArrayList<Statement>()
+
+    init {
+        sts.forEach { statements.add(it) }
+    }
+
+    fun add(st: Statement) {
+        statements.add(st)
+    }
+
+    override fun accept(visitor: AstTreeVisitor) {
+        visitor.visit(this)
+    }
+}
+
 class UnaryFunStatement(var func: UnaryFun, var operand: Expression): Statement() {
     override fun accept(visitor: AstTreeVisitor) {
         visitor.visit(this)
     }
 }
 
-class IfStatement(var cond: Expression, var ifTrue: Statement, var ifFalse: Statement): Statement() {
+class IfStatement(var cond: Expression, var ifTrue: Program, var ifFalse: Program): Statement() {
     override fun accept(visitor: AstTreeVisitor) {
         visitor.visit(this)
     }
 }
 
-class WhileStatement(var cond: Expression, var doStmnt: Statement): Statement() {
+class WhileStatement(var cond: Expression, var doStmnt: Program): Statement() {
     override fun accept(visitor: AstTreeVisitor) {
         visitor.visit(this)
     }
@@ -126,17 +145,3 @@ class CommandStatement(var cmd: Command): Statement() {
     }
 }
 
-/**
- * Statement may be combined from many statements...
- */
-class Program: Statement() {
-    val statements = ArrayList<Statement>()
-
-    fun add(st: Statement) {
-        statements.add(st)
-    }
-
-    override fun accept(visitor: AstTreeVisitor) {
-        visitor.visit(this)
-    }
-}

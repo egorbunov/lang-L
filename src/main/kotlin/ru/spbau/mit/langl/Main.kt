@@ -2,6 +2,7 @@ package ru.spbau.mit.langl
 
 import ru.spbau.mit.langl.app.AstVisualizeApp
 import ru.spbau.mit.langl.app.LexerApp
+import ru.spbau.mit.langl.app.PrettyPrintApp
 import ru.spbau.mit.langl.gen.Lexer
 import java.io.StringReader
 
@@ -23,6 +24,8 @@ fun help() {
     println("       Lexer tool...just lexer")
     println("   $AST_VISUALIZER")
     println("       Parses given line, generates and shows Abstract Syntax Tree")
+    println("   $PRETTY_PRINTER")
+    println("       Parses given line, prints pretty version of program")
 }
 
 fun main(args: Array<String>) {
@@ -34,6 +37,7 @@ fun main(args: Array<String>) {
     when (args[0]) {
         LEXER -> LexerApp().run()
         AST_VISUALIZER -> AstVisualizeApp().run()
+        PRETTY_PRINTER -> PrettyPrintApp().run()
         else -> help()
     }
 }

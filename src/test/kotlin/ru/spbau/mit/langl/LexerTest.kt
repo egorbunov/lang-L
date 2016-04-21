@@ -33,10 +33,10 @@ class LexerTest {
     }
 
     @Test fun test2() {
-        val lexer = Lexer(StringReader("read x; if y + 1 == x then write y else skip"), ComplexSymbolFactory())
+        val lexer = Lexer(StringReader("read x; if y + 1 == x then write y else skip od"), ComplexSymbolFactory())
         Assert.assertArrayEquals(
                 arrayOf(Sym.READ, Sym.ID, Sym.COLON, Sym.IF, Sym.ID, Sym.PLUS, Sym.INT,
-                        Sym.EQ, Sym.ID, Sym.THEN, Sym.WRITE, Sym.ID, Sym.ELSE, Sym.SKIP),
+                        Sym.EQ, Sym.ID, Sym.THEN, Sym.WRITE, Sym.ID, Sym.ELSE, Sym.SKIP, Sym.ENDWHILE),
                 getSymbols(lexer));
     }
 

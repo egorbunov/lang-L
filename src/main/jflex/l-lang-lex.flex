@@ -69,6 +69,8 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
     "do"                           { return symbol("DO", Sym.DO); }
     "skip"                         { return symbol("SKIP", Sym.SKIP); }
     "while"                        { return symbol("WHILE", Sym.WHILE); }
+    "od"                           { return symbol("ENDWHILE", Sym.ENDWHILE); }
+    "endif"                        { return symbol("ENDIF", Sym.ENDIF); }
 
 
     // operators
