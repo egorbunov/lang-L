@@ -12,6 +12,8 @@ import java.io.StringReader
 class ParserTest {
     @Test fun test1() {
         val parser = ParserWrapper(StringReader("x := 100"))
-        val stmnts = parser.parse()
+        val parse = parser.parse()
+
+
     }
 }

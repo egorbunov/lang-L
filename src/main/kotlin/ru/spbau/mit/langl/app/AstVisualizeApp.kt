@@ -21,7 +21,7 @@ class AstVisualizeApp: App {
         var applet: TreeVisApplet<VisTreeBuilder.Vertex, Int>? = null
 
         while(true) {
-            print("program >> ")
+            print("ast >> ")
             val program = readLine() ?: break
 
             val parser = ParserWrapper(StringReader(program))
@@ -29,6 +29,7 @@ class AstVisualizeApp: App {
                 parser.parse()!!
             } catch (e: Exception) {
                 println("ERROR: Can't parse given program...")
+                println(e.toString())
                 continue
             }
 
