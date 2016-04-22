@@ -97,7 +97,7 @@ class PrettyPrinter() : AstTreeVisitor<Unit> {
         sb.append(node.func.str)
         sb.append(" ")
         node.operand.accept(this)
-        sb.append(";\n")
+        sb.append("\n")
     }
 
     override fun visit(node: IfStatement) {
