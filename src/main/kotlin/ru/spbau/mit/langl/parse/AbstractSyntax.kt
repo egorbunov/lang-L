@@ -69,27 +69,27 @@ enum class Command(val str: String) {
 }
 
 abstract class AstNode {
-    abstract fun accept(visitor: AstTreeVisitor)
+    abstract fun <T> accept(visitor: AstTreeVisitor<T>): T
 }
 
 abstract class Expression : AstNode() {
 }
 
 class BinaryOpExpr(var op: BinaryOp, var lhs: Expression, var rhs: Expression): Expression() {
-    override fun accept(visitor: AstTreeVisitor) {
-        visitor.visit(this)
+    override fun <T> accept(visitor: AstTreeVisitor<T>): T {
+        return visitor.visit(this)
     }
 }
 
 class NumberNode(var value: Int): Expression() {
-    override fun accept(visitor: AstTreeVisitor) {
-        visitor.visit(this)
+    override fun <T> accept(visitor: AstTreeVisitor<T>): T {
+        return visitor.visit(this)
     }
 }
 
 class IdNode(var value: String): Expression() {
-    override fun accept(visitor: AstTreeVisitor) {
-        visitor.visit(this)
+    override fun <T> accept(visitor: AstTreeVisitor<T>): T {
+        return visitor.visit(this)
     }
 }
 
@@ -110,38 +110,38 @@ class Program(vararg sts: Statement): Statement() {
         statements.add(st)
     }
 
-    override fun accept(visitor: AstTreeVisitor) {
-        visitor.visit(this)
+    override fun <T> accept(visitor: AstTreeVisitor<T>): T {
+        return visitor.visit(this)
     }
 }
 
 class UnaryFunStatement(var func: UnaryFun, var operand: Expression): Statement() {
-    override fun accept(visitor: AstTreeVisitor) {
-        visitor.visit(this)
+    override fun <T> accept(visitor: AstTreeVisitor<T>): T {
+        return visitor.visit(this)
     }
 }
 
 class IfStatement(var cond: Expression, var ifTrue: Program, var ifFalse: Program): Statement() {
-    override fun accept(visitor: AstTreeVisitor) {
-        visitor.visit(this)
+    override fun <T> accept(visitor: AstTreeVisitor<T>): T {
+        return visitor.visit(this)
     }
 }
 
 class WhileStatement(var cond: Expression, var doStmnt: Program): Statement() {
-    override fun accept(visitor: AstTreeVisitor) {
-        visitor.visit(this)
+    override fun <T> accept(visitor: AstTreeVisitor<T>): T {
+        return visitor.visit(this)
     }
 }
 
 class AssignStatement(var id: IdNode, var expr: Expression): Statement() {
-    override fun accept(visitor: AstTreeVisitor) {
-        visitor.visit(this)
+    override fun <T> accept(visitor: AstTreeVisitor<T>): T {
+        return visitor.visit(this)
     }
 }
 
 class CommandStatement(var cmd: Command): Statement() {
-    override fun accept(visitor: AstTreeVisitor) {
-        visitor.visit(this)
+    override fun <T> accept(visitor: AstTreeVisitor<T>): T {
+        return visitor.visit(this)
     }
 }
 

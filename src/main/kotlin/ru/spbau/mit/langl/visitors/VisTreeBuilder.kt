@@ -10,7 +10,7 @@ import ru.spbau.mit.langl.parse.*
  * email: egor-mailbox@ya.ru
  */
 
-class VisTreeBuilder : AstTreeVisitor {
+class VisTreeBuilder : AstTreeVisitor<Unit> {
     /**
      * Tree, that is built by visitor
      */

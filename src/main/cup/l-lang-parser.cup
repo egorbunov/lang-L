@@ -34,7 +34,8 @@ non terminal Expression expr;
 precedence left NEQ, EQ, GE, GEQ, LE, LEQ;
 precedence left PLUS, MINUS;
 precedence left MUL, MOD, DIV;
-precedence left LOR, LAND;
+precedence left LOR;
+precedence left LAND;
 
 /* The grammar rules */
 st_list ::= st_list:p COLON statement:st {: p.add(st);

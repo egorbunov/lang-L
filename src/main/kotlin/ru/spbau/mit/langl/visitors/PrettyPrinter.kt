@@ -8,7 +8,7 @@ import java.io.OutputStreamWriter
  * email: egor-mailbox@ya.ru
  */
 
-class PrettyPrinter() : AstTreeVisitor {
+class PrettyPrinter() : AstTreeVisitor<Unit> {
 
     private val sb = StringBuilder()
     private var tabStr = ""

@@ -1,9 +1,5 @@
 package ru.spbau.mit.langl.app
 
-import java_cup.runtime.ComplexSymbolFactory
-import ru.spbau.mit.langl.gen.Lexer
-import ru.spbau.mit.langl.gen.Sym
-import ru.spbau.mit.langl.lex.IllegalCharacterException
 import ru.spbau.mit.langl.parse.ParserWrapper
 import ru.spbau.mit.langl.visitors.PrettyPrinter
 import java.io.OutputStreamWriter
@@ -23,6 +19,9 @@ class PrettyPrintApp: App {
             val parse = try {
                 ParserWrapper(StringReader(program)).parse()!!
             } catch (e: Exception) {
+                out.flush()
+                System.err.flush()
+                System.out.flush()
                 continue
             }
             PrettyPrinter.print(parse, out)

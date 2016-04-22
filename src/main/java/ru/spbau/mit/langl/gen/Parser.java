@@ -108,7 +108,7 @@ public class Parser extends java_cup.runtime.lr_parser {
     "\027\uffec\030\uffec\031\026\032\033\034\uffec\035\uffec\036" +
     "\uffec\001\002\000\054\002\uffee\005\uffee\006\uffee\011\uffee" +
     "\015\uffee\016\uffee\017\uffee\020\uffee\021\uffee\022\uffee\023" +
-    "\uffee\024\uffee\025\uffee\026\uffee\027\uffee\030\uffee\031\uffee" +
+    "\uffee\024\uffee\025\uffee\026\uffee\027\uffee\030\uffee\031\026" +
     "\032\uffee\034\uffee\035\uffee\036\uffee\001\002\000\054\002" +
     "\ufff3\005\ufff3\006\ufff3\011\ufff3\015\ufff3\016\ufff3\017\ufff3" +
     "\020\037\021\036\022\030\023\ufff3\024\ufff3\025\ufff3\026" +
