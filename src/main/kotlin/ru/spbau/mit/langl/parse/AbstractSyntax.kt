@@ -60,6 +60,16 @@ enum class BinaryPredicateOp(): BinaryOp {
     }
 }
 
+interface UnaryOp {
+    fun str(): String
+}
+
+enum class UnaryArithmeticOp: UnaryOp {
+    MINUS {
+        override fun str() = "-"
+    }
+}
+
 enum class UnaryFun(val str: String) {
     WRITE("write"), READ("read")
 }
@@ -76,6 +86,12 @@ abstract class Expression : AstNode() {
 }
 
 class BinaryOpExpr(var op: BinaryOp, var lhs: Expression, var rhs: Expression): Expression() {
+    override fun <T> accept(visitor: AstTreeVisitor<T>): T {
+        return visitor.visit(this)
+    }
+}
+
+class UnaryOpExpr(var op: UnaryOp, var rhs: Expression): Expression() {
     override fun <T> accept(visitor: AstTreeVisitor<T>): T {
         return visitor.visit(this)
     }

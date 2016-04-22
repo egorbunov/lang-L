@@ -16,4 +16,5 @@ interface AstTreeVisitor<T> {
     fun visit(node: WhileStatement): T
     fun visit(node: AssignStatement): T
     fun visit(node: CommandStatement): T
+    fun visit(node: UnaryOpExpr): T
 }

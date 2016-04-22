@@ -68,6 +68,20 @@ class VisTreeBuilder : AstTreeVisitor<Unit> {
         parent = oldParent
     }
 
+    override fun visit(node: UnaryOpExpr) {
+        val nodeLabel = "UNARY_OP_EXPR"
+
+        val oldParent = parent
+        val newNode = Vertex(false, nodeLabel)
+        tree.addEdge(edgeFactory.get(), oldParent, newNode)
+        tree.addEdge(edgeFactory.get(), newNode, Vertex(true, node.op.str()))
+
+        parent = newNode
+        node.rhs.accept(this)
+
+        parent = oldParent
+    }
+
     override fun visit(node: NumberNode) {
         val newNode = Vertex(false, "NUM")
         tree.addEdge(edgeFactory.get(), parent, newNode)

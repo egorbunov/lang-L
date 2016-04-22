@@ -5,6 +5,10 @@ import org.junit.Assert
 import org.junit.Test
 import ru.spbau.mit.langl.gen.Lexer
 import ru.spbau.mit.langl.gen.Sym
+import ru.spbau.mit.langl.parse.BinaryArithmeticOp
+import ru.spbau.mit.langl.parse.BinaryOp
+import ru.spbau.mit.langl.parse.BinaryPredicateOp
+import ru.spbau.mit.langl.parse.IdNode
 import java.io.StringReader
 import java.util.*
 
@@ -45,6 +49,11 @@ class LexerTest {
         Assert.assertArrayEquals(
                 arrayOf(Sym.ID, Sym.NEQ, Sym.ID),
                 getSymbols(lexer));
+    }
+
+    @Test fun x() {
+        val y: BinaryOp = BinaryPredicateOp.LAND
+        println(y is BinaryArithmeticOp)
     }
 }
 

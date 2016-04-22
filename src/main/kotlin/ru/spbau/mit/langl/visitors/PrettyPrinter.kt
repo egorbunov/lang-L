@@ -9,7 +9,6 @@ import java.io.OutputStreamWriter
  */
 
 class PrettyPrinter() : AstTreeVisitor<Unit> {
-
     private val sb = StringBuilder()
     private var tabStr = ""
     private var parent: AstNode? = null
@@ -134,12 +133,22 @@ class PrettyPrinter() : AstTreeVisitor<Unit> {
     override fun visit(node: AssignStatement) {
         node.id.accept(this)
         sb.append(" := ")
+        if (node.expr is BinaryOpExpr )
         node.expr.accept(this)
     }
 
     override fun visit(node: CommandStatement) {
         sb.append("${node.cmd.str}")
     }
+
+    override fun visit(node: UnaryOpExpr) {
+        sb.append(node.op.str())
+        val needParen = node.rhs is BinaryOpExpr || node.rhs is UnaryOpExpr
+        if (needParen) sb.append("(")
+        node.rhs.accept(this)
+        if (needParen) sb.append(")")
+    }
+
 
     companion object {
         fun print(tree: AstNode, out: OutputStreamWriter) {

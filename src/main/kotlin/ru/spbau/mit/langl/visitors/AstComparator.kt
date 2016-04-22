@@ -8,8 +8,7 @@ import java.util.*
  * email: egor-mailbox@ya.ru
  */
 
-class AstComparator : AstTreeVisitor, Comparator<AstNode> {
-
+class AstComparator : AstTreeVisitor<Unit>, Comparator<AstNode> {
     private var curNodeToComp: AstNode? = null
     private var result = 0
 
@@ -132,6 +131,21 @@ class AstComparator : AstTreeVisitor, Comparator<AstNode> {
         if (curNodeToComp !is CommandStatement || (curNodeToComp as CommandStatement).cmd != node.cmd) {
             result = -1
         }
+    }
+
+    override fun visit(node: UnaryOpExpr) {
+        if (curNodeToComp !is UnaryOpExpr) {
+            result = -1
+            return
+        }
+        val cur = curNodeToComp as UnaryOpExpr
+
+        if (cur.op != node.op) {
+            result = -1
+            return
+        }
+        curNodeToComp = cur.rhs
+        node.rhs.accept(this)
     }
 
     override fun compare(o1: AstNode?, o2: AstNode?): Int {

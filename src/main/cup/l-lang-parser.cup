@@ -31,11 +31,11 @@ non terminal UnaryFunStatement unary_fun_st;
 non terminal Expression expr;
 
 /* Precedences */
-precedence left NEQ, EQ, GE, GEQ, LE, LEQ;
 precedence left PLUS, MINUS;
 precedence left MUL, MOD, DIV;
 precedence left LOR;
 precedence left LAND;
+precedence left NEQ, EQ, GE, GEQ, LE, LEQ;
 
 /* The grammar rules */
 st_list ::= st_list:p COLON statement:st {: p.add(st);
@@ -74,6 +74,7 @@ expr ::= expr:e1 PLUS expr:e2                {: RESULT = new BinaryOpExpr(Binary
        | expr:e1 GEQ expr:e2                 {: RESULT = new BinaryOpExpr(RelationOp.GEQ, e1, e2); :}
        | expr:e1 LE expr:e2                  {: RESULT = new BinaryOpExpr(RelationOp.LE, e1, e2); :}
        | expr:e1 LEQ expr:e2                 {: RESULT = new BinaryOpExpr(RelationOp.LEQ, e1, e2); :}
+       | MINUS expr:e                        {: RESULT = new UnaryOpExpr(UnaryArithmeticOp.MINUS, e); :}
        | LPAREN expr:e RPAREN                {: RESULT = e; :}
        | ID:id                               {: RESULT = new IdNode(id); :}
        | INT:val                             {: RESULT = new NumberNode(val); :}
