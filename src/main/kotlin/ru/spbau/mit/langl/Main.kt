@@ -35,7 +35,7 @@ fun help() {
     println("   $PRETTY_PRINTER")
     println("       Parses given line, prints pretty version of program")
     println("   $AST_OPTIMIZER")
-    println("       Optimizes given program, optimizations supported:")
+    println("       Optimizes given program (draws new AST and pretty prints it), optimizations supported:")
     println("           * Arithmetic expressions evaluation")
     println("           * (x OP x) relations evaluated to numbers")
     println("           * Predicates with numbers operands evaluation")

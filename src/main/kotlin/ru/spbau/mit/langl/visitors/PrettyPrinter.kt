@@ -133,7 +133,6 @@ class PrettyPrinter() : AstTreeVisitor<Unit> {
     override fun visit(node: AssignStatement) {
         node.id.accept(this)
         sb.append(" := ")
-        if (node.expr is BinaryOpExpr )
         node.expr.accept(this)
     }
 
